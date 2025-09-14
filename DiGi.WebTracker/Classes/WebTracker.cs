@@ -5,11 +5,12 @@ namespace DiGi.WebTracker.Classes
     public class WebTracker
     {
         private bool busy = false;
-        private HttpClient httpClient = new HttpClient();
-        private string pageHash;
-        private System.Timers.Timer timer;
-        private string url;
-        public WebTracker(string url, int interval)
+        private readonly HttpClient httpClient = new();
+        private string? pageHash;
+        private readonly System.Timers.Timer? timer;
+        private readonly string? url;
+        
+        public WebTracker(string? url, int interval)
         {
             timer = new System.Timers.Timer(interval);
             timer.Elapsed += Timer_Elapsed;
@@ -30,12 +31,12 @@ namespace DiGi.WebTracker.Classes
 
         public void Start()
         {
-            timer.Start();
+            timer?.Start();
         }
 
         public void Stop()
         {
-            timer.Stop();
+            timer?.Stop();
         }
         
         private async Task<bool> Check()
@@ -47,7 +48,7 @@ namespace DiGi.WebTracker.Classes
             
             busy = true;
 
-            string pageHash = await Query.PageHash(httpClient, url);
+            string? pageHash = await Query.PageHash(httpClient, url);
 
             busy = false;
 
@@ -68,7 +69,7 @@ namespace DiGi.WebTracker.Classes
 
         private async void Timer_Elapsed(object? sender, ElapsedEventArgs e)
         {
-            bool check = await Check();
+            _ = await Check();
         }
     }
 }

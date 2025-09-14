@@ -5,14 +5,19 @@ namespace DiGi.WebTracker
 {
     public static partial class Query
     {
-        public static async Task<string> PageHash(HttpClient client, string url)
+        public static async Task<string?> PageHash(HttpClient? client, string? url)
         {
+            if(client is null || string.IsNullOrWhiteSpace(url))
+            {
+                return null;
+            }
+
             try
             {
                 string @string = await client.GetStringAsync(url);
                 using MD5 md5 = MD5.Create();
-                byte[] hashBytes = md5.ComputeHash(Encoding.UTF8.GetBytes(@string));
-                return BitConverter.ToString(hashBytes).Replace("-", "").ToLower();
+                byte[]? hashBytes = md5?.ComputeHash(Encoding.UTF8.GetBytes(@string));
+                return BitConverter.ToString(hashBytes ?? []).Replace("-", "").ToLower();
             }
             catch (Exception ex)
             {
